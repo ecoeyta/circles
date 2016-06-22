@@ -6,13 +6,9 @@
 			display: inline-block;
 			margin: 1em;
 		}
-
-		.circles-decimals {
-			font-size: .4em;
-		}
 	</style>
 </head>
-<body>
+<body style="background-color:#344B50">
 	<div id="canvas">
 		<div class="circle" id="circles-1"></div>
 		<div class="circle" id="circles-2"></div>
@@ -22,12 +18,9 @@
 		<br />
 		<button id="add_button">Value +10</button>
 		<button id="substract_button">Value -10</button>
-		<button id="add_width_button">Width +10</button>
-		<button id="substract_width_button">Width -10</button>
-		<button id="colors_button">Swap colors</button>
 	</div>
 
-	<script src="../circles.min.js"></script>
+	<script src="../circles.js"></script>
 	<script>
 		//@ http://jsfromhell.com/array/shuffle [v1.0]
 		function shuffle(o){ //v1.0
@@ -35,20 +28,25 @@
 			return o;
 		}
 
+		var backgroundStrokeColor ='#43565B';
 		var colors = [
-			['#D3B6C6', '#4B253A'], ['#FCE6A4', '#EFB917'], ['#BEE3F7', '#45AEEA'], ['#F8F9B6', '#D2D558'], ['#F4BCBF', '#D43A43']
+			[backgroundStrokeColor, '#4B253A'], [backgroundStrokeColor, '#EFB917'], [backgroundStrokeColor, '#45AEEA'], [backgroundStrokeColor, '#D2D558'], [backgroundStrokeColor, '#D43A43']
 		], circles = [];
 
 		for (var i = 1; i <= 5; i++) {
 			var child = document.getElementById('circles-' + i),
 				percentage = 31.42 + (i * 9.84);
 
+				var showPercentage = (i < 4);
+
 			circles.push(Circles.create({
-				id:         child.id,
-				value:		percentage,
-				radius:     60,
-				width:      10,
-				colors:     colors[i - 1]
+				id:         	child.id,
+				value:			percentage,
+				maxValue:		showPercentage ? 100 : (i * 23),
+				radius:     	60,
+				width:      	5,
+				colors:     	colors[i - 1],
+				showPercentage:	showPercentage
 			}));
 		}
 
@@ -62,25 +60,6 @@
 		{
 			for(var i = 0, l = circles.length; i < l; i++)
 				circles[i].update(circles[i]._value - 10, 250);
-		};
-
-		document.getElementById('add_width_button').onclick = function()
-		{
-			for(var i = 0, l = circles.length; i < l; i++)
-				circles[i].updateWidth(circles[i]._strokeWidth + 10);
-		};
-
-		document.getElementById('substract_width_button').onclick = function()
-		{
-			for(var i = 0, l = circles.length; i < l; i++)
-				circles[i].updateWidth(circles[i]._strokeWidth - 10);
-		};
-
-		document.getElementById('colors_button').onclick = function()
-		{
-			colors = shuffle(colors);
-			for(var i = 0, l = circles.length; i < l; i++)
-				circles[i].updateColors(colors[i]);
 		};
 	</script>
 </body>

@@ -27,6 +27,7 @@
                  if 0 or `null` is passed, the animation will not run
     wrpClass     - class name to apply on the generated element wrapping the whole circle.
     textClass:   - class name to apply on the generated element wrapping the text content.
+    showPercentage:   - boolean whether or not value should be shown as a percentage or fraction.
 
     API:
       updateRadius(radius) - regenerates the circle with the given radius (see spec/responsive.html for an example hot to create a responsive circle)
@@ -78,9 +79,10 @@
     this._value          = 0;
     this._maxValue       = options.maxValue || 100;
 
-    this._text           = options.text === undefined ? function(value){return this.htmlifyNumber(value);} : options.text;
-    this._strokeWidth    = options.width  || 10;
-    this._colors         = options.colors || ['#EEE', '#F00'];
+    this._showPercentage = options.showPercentage === undefined ? true : options.showPercentage;
+    this._text           = options.text === undefined ? function(value){return (this._showPercentage == true ? this.htmlifyNumberPercentage(value) : this.htmlifyNumberFraction(value+'.'+this._maxValue));} : options.text;
+    this._strokeWidth    = options.width  || 5;
+    this._colors         = options.colors || ['#EEE'];
     this._svg            = null;
     this._movingPath     = null;
     this._wrapContainer  = null;
@@ -151,7 +153,8 @@
           left:       0,
           textAlign:  'center',
           width:      '100%',
-          fontSize:   (this._radius * .7) + 'px',
+          font:       (this._radius * .5) + 'px Tahoma, Geneva, sans-serif',
+          color:      '#FFFFFF',
           height:     this._svgSize + 'px',
           lineHeight: this._svgSize + 'px'
         };
@@ -170,7 +173,7 @@
 
       if (value === undefined) value = this._value;
 
-      value = parseFloat(value.toFixed(2));
+      value = parseFloat(value.toFixed());
 
       return typeof this._text === 'function' ? this._text.call(this, value) : this._text;
     },
@@ -181,7 +184,6 @@
       this._svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
       this._svg.setAttribute('width', this._svgSize);
       this._svg.setAttribute('height', this._svgSize);
-
       this._generatePath(100, false, this._colors[0], this._maxValClass)._generatePath(1, true, this._colors[1], this._valClass);
 
       this._movingPath = this._svg.getElementsByTagName('path')[1];
@@ -234,17 +236,21 @@
 
     /*== Public methods ==*/
 
-    htmlifyNumber: function(number, integerPartClass, decimalPartClass) {
-
-      integerPartClass = integerPartClass || 'circles-integer';
-      decimalPartClass = decimalPartClass || 'circles-decimals';
+    htmlifyNumberPercentage: function(number, percentagePartClass) {
+      percentagePartClass = percentagePartClass || 'circles-percentage';
 
       var parts = (number + '').split('.'),
-          html  = '<span class="' + integerPartClass + '">' + parts[0]+'</span>';
+          html  = '<span class="' + percentagePartClass + '">' + parts[0]+'%'+'</span>';
 
-      if (parts.length > 1) {
-              html += '.<span class="' + decimalPartClass + '">' + parts[1].substring(0, 2) + '</span>';
-          }
+      return html;
+    },
+
+    htmlifyNumberFraction: function(number, fractionPartClass) {
+      fractionPartClass = fractionPartClass || 'circles-fraction';
+
+      var parts = (number + '').split('.'),
+          html  = '<span class="' + fractionPartClass + '">' + parts[0]+'/'+parts[1]+'</span>';
+
       return html;
     },
 
@@ -253,7 +259,7 @@
 
       return this._generate().update(true);
     },
-
+    
     updateWidth: function(width) {
       this._strokeWidth = width;
 
