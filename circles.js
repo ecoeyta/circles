@@ -38,7 +38,8 @@
       getValue() - returns the value of the circle
       getMaxValue() - returns the max value of the circle
        getValueFromPercent(percentage) - returns the corresponding value of the circle based on its max value and given percentage
-       htmlifyNumber(number, integerPartClass, decimalPartClass) - returned HTML representation of given number with given classes names applied on tags
+       htmlifyNumberPercentage(number, percentagePartClass) - returned HTML representation of given number with given classes names applied on tags
+       htmlifyNumberFraction(number, fractionPartClass) - returned HTML representation of given number with given classes names applied on tags
 
 */
 

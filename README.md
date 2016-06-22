@@ -1,7 +1,5 @@
 # Circles
 
-![Circles](http://lugolabs.com/static/circles.png)
-
 Lightweight JavaScript library that generates circular graphs in SVG. Now with animation.
 
 ### Usage
@@ -31,7 +29,8 @@ var myCircle = Circles.create({
   valueStrokeClass:    'circles-valueStroke',
   maxValueStrokeClass: 'circles-maxValueStroke',
   styleWrapper:        true,
-  styleText:           true
+  styleText:           true,
+  showPercentage:      true
 });
 ```
 
@@ -51,6 +50,7 @@ where
 * `styleWrapper`  - whether or not to add inline styles to the wrapper element (defaults to true)
 * `styleText`	    - whether or not to add inline styles to the text (defaults to true)
 * `text`          - the text to display at the center of the graph (optional, the current "htmlified" value will be shown). If `null` or an empty string, no text will be displayed. It can also be a function: the returned value will be the displayed text like in the examples below:
+* `showPercentage`  - whether or not the value of the graph should be shown as a percentage or a fraction
 
 ```js
 // Example 1
@@ -130,12 +130,16 @@ myCircle.getValueFromPercent(Number percentage)
 Returns the corresponding value of the circle based on its max value and given `percentage`.
 
 ```js
-myCircle.htmlifyNumber(Number number[, integerPartClass, decimalPartClass])
+myCircle.htmlifyNumberPercentage(Number number[, percentagePartClass])
+```
+
+```js
+myCircle.htmlifyNumberFraction(Number number[, fractionPartClass])
 ```
 
 Returned HTML representation of given `number` with given classes names applied on tags.
-Default value of `integerPartClass` is **circles-integer**.
-Default value of `decimalPartClass` is **circles-decimals**.
+Default value of `percentagePartClass` is **circles-percentage**.
+Default value of `fractionPartClass` is **circles-fraction**.
 
 ### Styles
 
@@ -143,10 +147,10 @@ The styles have been specified inline to avoid external dependencies. But they c
 
 To help with this, a few CSS classes have been exposed:
 
-* `circles-wrp` 	    - the element wrapping the whole circle
-* `circles-text`      - the element wrapping text content
-* `circles-integer`   - the element wrapping the text before the dot
-* `circles-decimals` 	- the element wrapping the decimal places
+* `circles-wrp` 	       - the element wrapping the whole circle
+* `circles-text`         - the element wrapping text content
+* `circles-percentage`   - the element wrapping the text in percentage form
+* `circles-decimals`   	  - the element wrapping the text in fraction form
 
 You can overwritte these classes by sending properties `wrpClass` and/or `textClass` to the constructor.
 
